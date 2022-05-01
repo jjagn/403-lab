@@ -69,10 +69,11 @@ sys = ss(A, B, C, D)
 %% DESIGNING CONTROL GAINS
 % set system poles
 C_prime = [1 0 0 0]
-poles = [-15+1i -15-1i -10+2i -10-2i]; % these are just guesses
 
+Q = diag([100 0 0 0]);
+R = 0.005;
 
-K = place(A, B, poles)
+K = lqr(sys, Q, R)
 
 ACL = (A - B*K) % closed loop A matrix
 N = -inv(C_prime*inv(ACL)*B)
@@ -81,6 +82,7 @@ names = {'v' 'theta' 'dv' 'dtheta'};
 sys = ss(ACL, B_hat, C, D)
 sys.StateName = names;
 sys.OutputName = names;
+
 %% SYSTEM RESPONSE
 figure(1)
 [Y, T, XT] = step(sys);
