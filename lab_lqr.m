@@ -70,8 +70,8 @@ sys = ss(A, B, C, D)
 % set system poles
 C_prime = [1 0 0 0]
 
-Q = diag([100 0 0 0]);
-R = 0.005;
+Q = diag([10000 1 1 1]);
+R = 1.05;
 
 K = lqr(sys, Q, R)
 
@@ -87,13 +87,27 @@ sys.OutputName = names;
 figure(1)
 [Y, T, XT] = step(sys);
 
-
+% calculate voltage and slew
 V = N*ref - K*XT';
 DV = gradient(V);
 
+% plot system step response
 step_plot = stepplot(sys);
-info = stepinfo(sys);
 
+% pull out system characteristics
+info = stepinfo(sys)
+
+% get x and theta characteristics from struct
+x_info = info(1)
+theta_info = info(2)
+
+% printing characteristics for each parameter/state
+x_rise_time = x_info.RiseTime
+x_settling_time = x_info.SettlingTime
+theta_settling_time = theta_info.SettlingTime
+
+
+% plots
 figure(2)
 plot(T,Y)
 legend('x', 'theta', 'dx', 'dtheta')
@@ -104,3 +118,7 @@ legend('Voltage [V]', 'Slew Rate [Vs^-1]')
 % check voltage parameters within acceptable limits
 assert(max(abs(V)) < 10, 'voltage request too high')
 assert(max(abs(DV)) < 30, 'voltage slew request too high')
+
+% print important info for lab at program end
+N
+K
