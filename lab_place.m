@@ -1,5 +1,8 @@
 clear, clc, close all;
 
+% for program control
+LQR = false
+
 % define parameters
 M_p = 0.215;        % Pendulum mass                     [kg]
 M_c = 1.608;        % Cart mass                         [kg]
@@ -11,6 +14,7 @@ k_g = 3.71;         % Gearing ratio                     [unitless]
 k_m = 0.0168;       % Motor BEMF constant               [V*s*rad^-1]
 C = 0;              % Cart damping                      [N*s*m^-1]
 g = 9.81;           % Gravitational acceleration        [m*s^2]
+ref = 0.1             % tracking reference                [m]
 
 % pre-define matrix entries
 % entry in A at pos (3,2)
@@ -64,23 +68,38 @@ sys = ss(A, B, C, D)
 
 %% DESIGNING CONTROL GAINS
 % set system poles
-poles = [-5+1i -5-1i -10+2i -10-2i]; % these are just guesses
+C_prime = [1 0 0 0]
 
-K = place(A, B, poles)
-
-ACL = (A - B*K)
-
-sys = ss(ACL, B, C, D)
-
-Q = diag([1, 1, 100, 100]);
+Q = diag([10 10 10 10]);
 R = 1;
 
 K = lqr(sys, Q, R)
 
+ACL = (A - B*K) % closed loop A matrix
+N = -inv(C_prime*inv(ACL)*B)
+B_hat = B*N*ref
+names = {'v' 'theta' 'dv' 'dtheta'};
+sys = ss(ACL, B_hat, C, D)
+sys.StateName = names;
+sys.OutputName = names;
 %% SYSTEM RESPONSE
+figure(1)
+[Y, T, XT] = step(sys);
 
-figure
-impulse_plot = impulseplot(sys);
 
-figure
+V = N*ref - K*XT';
+DV = gradient(V);
+
 step_plot = stepplot(sys);
+info = stepinfo(sys);
+
+figure(2)
+plot(T,Y)
+legend('x', 'theta', 'dx', 'dtheta')
+figure(3)
+plot(T, [V', DV'])
+legend('Voltage [V]', 'Slew Rate [Vs^-1]')
+
+% check voltage parameters within acceptable limits
+assert(max(abs(V)) < 10, 'voltage request too high')
+assert(max(abs(DV)) < 30, 'voltage slew request too high')
