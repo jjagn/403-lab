@@ -1,29 +1,35 @@
 clear, clc, close all
-filename = "data/jdw144lqr1_pendulum_2may.mat";
-load(filename);
 
-data = jdw144lqr1;
+files = dir("data/pendulum/*.mat");
+len = length(files);
 
-time_data = data.X(1).Data;
+for i = 1:len
+    filename = convertCharsToStrings(strcat([files(i).folder '/' files(i).name])); 
+    data = load(filename);
+    name = cell2mat(fieldnames(data));
+    data = data.(name);
 
-C1P = data.Y(1).Data;
-C1P_GAIN = data.Y(2).Data(1);
-C1V = data.Y(3).Data;
-C1V_GAIN = data.Y(4).Data(1);
+    time_data = data.X(1).Data;
+	    
+    cart_position = data.Y(1).Data;
+    cart_position_gain = data.Y(2).Data(1);
+    cart_velocity = data.Y(3).Data;
+    cart_velocity_gain = data.Y(4).Data(1);
+    tracking_gain = data.Y(5).Data(1);
+    cart_position_command = data.Y(6).Data;
+    pendulum_position_gain = data.Y(7).Data(1);
+    pendulum_position = data.Y(8).Data;
+    pendulum_velocity = data.Y(9).Data;
+    pendulum_velocity_gain = data.Y(10).Data(1);
+    raw_motor_voltage = data.Y(11).Data;
+    
+    fprintf('P Gain 1: %f \n', cart_position_gain)
+    fprintf('V Gain 1: %f \n', cart_velocity_gain)
+    
+    figure()
+    plot(time_data, [cart_position' cart_velocity' cart_position_command', pendulum_position' pendulum_velocity' raw_motor_voltage'])
+    title(convertCharsToStrings(name))
+    legend('position [m]', 'velocity[ms^-1]', 'position command [m]', 'pendulum position [rad]', 'pendulum velocity [rads^-1]', 'raw motor voltage [V]')
+end
 
-C2P = data.Y(5).Data;
-C2P_GAIN = data.Y(6).Data;
-C2V = data.Y(7).Data;
-C2V_GAIN = data.Y(8).Data;
 
-CMV = data.Y(9).Data;
-PC = data.Y(10).Data;
-RMV = data.Y(11).Data;
-
-fprintf('P Gain 1: %f \n', C1P_GAIN)
-fprintf('V Gain 1: %f \n', C1V_GAIN)
-
-fprintf('P Gain 2: %f \n', C2P_GAIN)
-fprintf('V Gain 2: %f \n', C2V_GAIN)
-
-plot(time_data, [C1P' C1V'])
