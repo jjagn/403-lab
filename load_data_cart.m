@@ -1,14 +1,21 @@
 clear, clc, close all
 
+%% CHECK DIRECTORY FOR MAT FILES
 files = dir("data/3 cart/*.mat");
 len = length(files);
 
+%% MAIN LOOP
 for i = 1:len
+    % get filename from files struct
     filename = convertCharsToStrings(strcat([files(i).folder '/' files(i).name])); 
     data = load(filename);
+
+    % unpack data so we don't have to hardcode the name every time
     name = cell2mat(fieldnames(data));
     data = data.(name);
+    name_str = convertCharsToStrings(name);
 
+    % pull out data from struct
     time_data = data.X(1).Data;
 	
     C1P = data.Y(1).Data;
@@ -29,6 +36,10 @@ for i = 1:len
     CMV = data.Y(13).Data;
     PC = data.Y(14).Data;
     RMV = data.Y(15).Data;
+
+    %% PRINT GAINS
+
+    fprintf('%s gains\n', name_str)
     
     fprintf('P Gain 1: %f \n', C1P_GAIN)
     fprintf('V Gain 1: %f \n', C1V_GAIN)
@@ -38,9 +49,20 @@ for i = 1:len
 
     fprintf('P Gain 3: %f \n', C3P_GAIN)
     fprintf('V Gain 3: %f \n', C3V_GAIN)
+
+    fprintf('\n\n\n')
     
+    %% PLOT FIGURES
+
+    % position plot
     figure()
-    plot(time_data, [C1P' C1V' C2P' C2V' C3P' C3V' CMV' PC' RMV'])
-    title(convertCharsToStrings(name))
-    legend('p1', 'v1', 'p2', 'v2', 'p3', 'v3', 'commanded voltage', 'commanded position', 'raw motor voltage')
+    plot(time_data, [C1P' C2P' C3P' PC'])
+    title(strcat([name_str "position"]))
+    legend('p1', 'p2', 'p3', 'commanded position')
+
+    % voltage plot
+    figure()
+    plot(time_data, [RMV' CMV'])
+    title(strcat([name_str "commanded vs raw voltage"]))
+    legend('raw motor voltage', 'commanded voltage')
 end
