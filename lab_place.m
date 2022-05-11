@@ -91,11 +91,11 @@ DV = gradient(V);
 step_plot = stepplot(sys);
 
 % pull out system characteristics
-info = stepinfo(sys)
+info = stepinfo(sys);
 
 % get x and theta characteristics from struct
-x_info = info(1)
-theta_info = info(2)
+x_info = info(1);
+theta_info = info(2);
 
 % printing characteristics for each parameter/state
 x_rise_time = x_info.RiseTime
