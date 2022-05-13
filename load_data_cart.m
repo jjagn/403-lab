@@ -2,7 +2,8 @@ clear, clc, close all
 
 %% CHECK DIRECTORY FOR MAT FILES
 files = dir("data/3 cart/*.mat");
-len = length(files);
+% len = length(files);
+len = 1; % set len to 1 so we don't waste time iterating through all the files when we don't need to
 
 %% MAIN LOOP
 for i = 1:len
@@ -62,7 +63,10 @@ for i = 1:len
 
     % voltage plot
     figure()
+    voltage_diff = CMV-RMV;
     plot(time_data, [RMV' CMV'])
+    yyaxis right
+    plot(time_data, voltage_diff')
     title(strcat([name_str "commanded vs raw voltage"]))
-    legend('raw motor voltage', 'commanded voltage')
+    legend('raw motor voltage', 'commanded voltage', 'difference')
 end
