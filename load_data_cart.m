@@ -2,8 +2,8 @@ clear, clc, close all
 
 %% CHECK DIRECTORY FOR MAT FILES
 files = dir("data/3 cart/*.mat");
-% len = length(files);
-len = 1; % set len to 1 so we don't waste time iterating through all the files when we don't need to
+len = length(files);
+% len = 1; % set len to 1 so we don't waste time iterating through all the files when we don't need to
 
 %% MAIN LOOP
 for i = 1:len
@@ -43,30 +43,29 @@ for i = 1:len
     fprintf('%s gains\n', name_str)
     
     fprintf('P Gain 1: %f \n', C1P_GAIN)
-    fprintf('V Gain 1: %f \n', C1V_GAIN)
-
     fprintf('P Gain 2: %f \n', C2P_GAIN)
-    fprintf('V Gain 2: %f \n', C2V_GAIN)
-
     fprintf('P Gain 3: %f \n', C3P_GAIN)
+    fprintf('V Gain 1: %f \n', C1V_GAIN)    
+    fprintf('V Gain 2: %f \n', C2V_GAIN)
     fprintf('V Gain 3: %f \n', C3V_GAIN)
 
-    fprintf('\n\n\n')
+    fprintf('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
     
     %% PLOT FIGURES
 
     % position plot
     figure()
-    plot(time_data, [C1P' C2P' C3P' PC'])
+    % plot(time_data, [C1P' C2P' C3P' PC'], 'LineWidth', 3)
+    plot(time_data, [C3P' PC'], 'LineWidth', 3)
     title(strcat([name_str "position"]))
-    legend('p1', 'p2', 'p3', 'commanded position')
+    legend('Cart 1 position', 'Cart 1 position', 'Cart 3 position', 'Position command')
 
     % voltage plot
-    figure()
-    voltage_diff = CMV-RMV;
-    plot(time_data, [RMV' CMV'])
-    yyaxis right
-    plot(time_data, voltage_diff')
-    title(strcat([name_str "commanded vs raw voltage"]))
-    legend('raw motor voltage', 'commanded voltage', 'difference')
+%     figure()
+%     voltage_diff = CMV-RMV;
+%     plot(time_data, [RMV' CMV'], 'LineWidth', 3)
+%     hold on
+%     plot(time_data, voltage_diff', 'LineWidth', 3)
+%     title(strcat([name_str "commanded vs raw voltage"]))
+%     legend('Raw motor voltage', 'Commanded voltage', 'Difference')
 end

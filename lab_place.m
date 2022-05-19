@@ -66,7 +66,7 @@ D = 0;
 %% DESIGNING CONTROL GAINS
 % set system poles
 
-poles = [-10+2i -10-2i -15+1i -15-1i]; % these are just guesses
+poles = [-50 -35 -1.5+1i -1.5-1i]; % these are just guesses
 
 % place poles
 K = place(A, B, poles)
@@ -98,23 +98,23 @@ x_info = info(1);
 theta_info = info(2);
 
 % printing characteristics for each parameter/state
-x_rise_time = x_info.RiseTime
-x_settling_time = x_info.SettlingTime
-theta_settling_time = theta_info.SettlingTime
+x_rise_time = x_info.RiseTime;
+x_settling_time = x_info.SettlingTime;
+theta_settling_time = theta_info.SettlingTime;
 
 
 % plots
-figure(2)
-plot(T,Y)
-legend('x', 'theta', 'dx', 'dtheta')
+% figure(2)
+% plot(T,Y)
+% legend('x', 'theta', 'dx', 'dtheta')
 figure(3)
 plot(T, [V', DV'])
 legend('Voltage [V]', 'Slew Rate [Vs^-1]')
 
-% check voltage parameters within acceptable limits
-assert(max(abs(V)) < 10, 'voltage request too high')
-assert(max(abs(DV)) < 30, 'voltage slew request too high')
-
 % print important info for lab at program end
 N
 K
+
+% check voltage parameters within acceptable limits
+assert(max(abs(V)) < 10, 'voltage request too high')
+assert(max(abs(DV)) < 30, 'voltage slew request too high')

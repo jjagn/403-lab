@@ -1,14 +1,21 @@
 clear, clc, close all
 
+%% CHECK DIRECTORY FOR MAT FILES
 files = dir("data/pendulum/*.mat");
 len = length(files);
 
+%% MAIN LOOP
 for i = 1:len
+    % get filename from files struct
     filename = convertCharsToStrings(strcat([files(i).folder '/' files(i).name])); 
     data = load(filename);
+
+    % unpack data so we don't have to hardcode the name every time
     name = cell2mat(fieldnames(data));
     data = data.(name);
+    name_str = convertCharsToStrings(name);
 
+    % pull out data from struct
     time_data = data.X(1).Data;
 	    
     cart_position = data.Y(1).Data;
@@ -22,14 +29,18 @@ for i = 1:len
     pendulum_velocity = data.Y(9).Data;
     pendulum_velocity_gain = data.Y(10).Data(1);
     raw_motor_voltage = data.Y(11).Data;
-    
-    fprintf('P Gain 1: %f \n', cart_position_gain)
-    fprintf('V Gain 1: %f \n', cart_velocity_gain)
+
+    fprintf('Gains for %s\n', name)
+    fprintf('Cart P Gain: %f \n', cart_position_gain)
+    fprintf('Cart V Gain: %f \n', cart_velocity_gain)
+    fprintf('Pend P Gain: %f \n', pendulum_position_gain)
+    fprintf('Pend V Gain: %f \n', pendulum_velocity_gain)
+    fprintf('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
     
     figure()
-    plot(time_data, [cart_position' cart_velocity' cart_position_command', pendulum_position' pendulum_velocity' raw_motor_voltage'])
+    plot(time_data, [cart_position' cart_position_command' pendulum_position' raw_motor_voltage'], 'LineWidth', 3)
     title(convertCharsToStrings(name))
-    legend('position [m]', 'velocity[ms^-1]', 'position command [m]', 'pendulum position [rad]', 'pendulum velocity [rads^-1]', 'raw motor voltage [V]')
+    legend('position [m]','position command [m]', 'pendulum position [rad]', 'raw motor voltage [V]')
 end
 
 
