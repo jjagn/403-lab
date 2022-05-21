@@ -4,17 +4,6 @@ clear, clc, close all
 files = dir("data/pendulum/*.mat");
 len = length(files);
 
-figure(1)
-hold on
-figure(2)
-hold on
-
-% making plots pretty + readable
-FontSize = 20;
-lineSpecs = ["-";"--";":";"-.";"-"];
-fontsize(gca, FontSize, 'points')
-to_print = [5 6 7 8 10];
-
 %% MAIN LOOP
 for i = 1:len
     % get filename from files struct
@@ -40,34 +29,17 @@ for i = 1:len
     pendulum_velocity = data.Y(9).Data;
     pendulum_velocity_gain = data.Y(10).Data(1);
     raw_motor_voltage = data.Y(11).Data;
-
-    fprintf('Gains for %s\n', name)
+    
     fprintf('Cart P Gain: %f \n', cart_position_gain)
     fprintf('Cart V Gain: %f \n', cart_velocity_gain)
     fprintf('Pend P Gain: %f \n', pendulum_position_gain)
     fprintf('Pend V Gain: %f \n', pendulum_velocity_gain)
-    fprintf('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
+    fprintf('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
     
-    lineSpec = lineSpecs(i)
-    if (ismember(i, to_print))
-        disp(i)
-        figure(1)
-        plot(time_data, raw_motor_voltage, lineSpec, 'LineWidth', 3)
-        figure(2)
-        plot(time_data, [cart_position', pendulum_position'], lineSpec, 'LineWidth', 3)
-    end
+    figure()
+    plot(time_data, [cart_position' cart_position_command' pendulum_position' raw_motor_voltage'], 'LineWidth', 3)
+    title(convertCharsToStrings(name))
+    legend('position [m]','position command [m]', 'pendulum position [rad]', 'raw motor voltage [V]')
 end
-figure(1)
-legend('voltage 1', 'voltage 2', 'voltage 3', 'voltage 4')
-figure(2)
-legend('position 1 [m]', 'pendulum position 1 [rad]',...
-    'position 2 [m]', 'pendulum position 2 [rad]',...
-    'position 3 [m]', 'pendulum position 3 [rad]',...
-    'position 4 [m]', 'pendulum position 4 [rad]')
-figure(3)
-legend('position 1 [m]', 'pendulum position 1 [rad]',...
-    'position 2 [m]', 'pendulum position 2 [rad]',...
-    'position 3 [m]', 'pendulum position 3 [rad]',...
-    'position 4 [m]', 'pendulum position 4 [rad]')
 
 
