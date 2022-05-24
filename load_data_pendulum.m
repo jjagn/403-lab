@@ -38,9 +38,9 @@ for i = 1:len
     fprintf('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
     
     figure()
-    plot(time_data, [cart_position' cart_position_command' pendulum_position' raw_motor_voltage'], 'LineWidth', 3)
+    plot(time_data, [cart_position' cart_position_command' pendulum_position'], 'LineWidth', 3)
     title(convertCharsToStrings(name))
-    legend('position [m]','position command [m]', 'pendulum position [rad]', 'raw motor voltage [V]')
+    legend('position [m]','position command [m]', 'pendulum position [rad]')
 end
 
 
