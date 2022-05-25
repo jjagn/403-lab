@@ -99,6 +99,11 @@ legend('Original System', 'Weight on cart 2', 'Weight on cart 3', 'Weight on car
 % legend('Cart 3 position')
 xlabel('Time [s]', 'FontSize', FontSize)
 ylabel('Cart 3 position [m]', 'FontSize', FontSize)
+
+% ax = gca;
+% exportgraphics(a,'figs\LinePlot.jpg', 'Resolution', 400)
+
+
 %     legend('Cart 3 position 1', 'Position command 1',...
 %         'Cart 3 position 2', 'Position command 2',...
 %         'Cart 3 position 3', 'Position command 3',...
