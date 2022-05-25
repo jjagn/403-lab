@@ -4,9 +4,9 @@ clear, clc, close all
 files = dir("data/3 cart/*.mat");
 len = length(files);
 % len = 1; % set len to 1 so we don't waste time iterating through all the files when we don't need to
-
+FontSize = 20;
 %% MAIN LOOP
-for i = 1:len
+for i = 1
     % get filename from files struct
     filename = convertCharsToStrings(strcat([files(i).folder '/' files(i).name])); 
     data = load(filename);
@@ -57,8 +57,9 @@ for i = 1:len
     figure()
     % plot(time_data, [C1P' C2P' C3P' PC'], 'LineWidth', 3)
     plot(time_data, [C3P' PC'], 'LineWidth', 3)
-    title(strcat([name_str "position"]))
+    % title(strcat([name_str "position"]))
     legend('Cart 1 position', 'Cart 1 position', 'Cart 3 position', 'Position command')
+    fontsize(gca, FontSize, 'points')
 
     % voltage plot
 %     figure()

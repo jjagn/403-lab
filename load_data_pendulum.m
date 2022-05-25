@@ -4,8 +4,13 @@ clear, clc, close all
 files = dir("data/pendulum/*.mat");
 len = length(files);
 
+% making plots pretty + readable
+FontSize = 20;
+lineSpecs = ["-";"--";":";"-."];
+fontsize(gca, FontSize, 'points')
+
 %% MAIN LOOP
-for i = 1:len
+for i = 2:3
     % get filename from files struct
     filename = convertCharsToStrings(strcat([files(i).folder '/' files(i).name])); 
     data = load(filename);
@@ -37,10 +42,44 @@ for i = 1:len
     fprintf('Pend V Gain: %f \n', pendulum_velocity_gain)
     fprintf('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
     
-    figure()
+    figure(i-1)
     plot(time_data, [cart_position' cart_position_command' pendulum_position'], 'LineWidth', 3)
-    title(convertCharsToStrings(name))
-    legend('position [m]','position command [m]', 'pendulum position [rad]')
+    %title(convertCharsToStrings(name))
+    legend('Position [m]','Position command [m]', 'Pendulum position [rad]')
+    xlabel('Time [s]', 'FontSize', FontSize)
+    xlabel('', 'FontSize', FontSize)
+    fontsize(gca, FontSize, 'points')
+
+    
+    start_pos = 8111-3438;
+
+    figure(4)
+    hold on
+    plot(time_data, cart_position, 'LineWidth', 3)
+%     if i == 3
+%         time_data = time_data+start_pos/1000;
+%         plot(time_data(1:end-start_pos), cart_position(1:end-start_pos), 'LineWidth', 3)
+%     else
+%         plot(time_data(start_pos:end), cart_position(start_pos:end), 'LineWidth', 3)
+%     end
+    hold off
+
+    figure(5)
+    hold on
+    plot(time_data, pendulum_position, 'LineWidth', 3)
+    hold off
+
 end
+
+figure(4)
+legend('Gain set 1', 'Gain set 2', 'Gain set 3')
+xlabel('Time [s]', 'FontSize', FontSize)
+ylabel('Cart position [m]', 'FontSize', FontSize)
+fontsize(gca, FontSize, 'points')
+figure(5)
+legend('Gain set 1', 'Gain set 2', 'Gain set 3')
+xlabel('Time [s]', 'FontSize', FontSize)
+ylabel('Pendulum position [rad]', 'FontSize', FontSize)
+fontsize(gca, FontSize, 'points')
 
 

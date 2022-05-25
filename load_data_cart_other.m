@@ -96,6 +96,7 @@ end
 plot(time_data(start:end_time), PC(start:end_time), 'Linewidth', 2)
 xlim([0, time_data(end_time)])
 legend('Original System', 'Weight on cart 2', 'Weight on cart 3', 'Weight on carts 2 & 3', 'Position Command', 'Fontsize', FontSize)
+% legend('Cart 3 position')
 xlabel('Time [s]', 'FontSize', FontSize)
 ylabel('Cart 3 position [m]', 'FontSize', FontSize)
 %     legend('Cart 3 position 1', 'Position command 1',...
